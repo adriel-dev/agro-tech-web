@@ -1,0 +1,30 @@
+<mat-toolbar class="mat-elevation-z3 d-flex justify-content-between">
+    <button mat-icon-button (click)="collapsed.set(!collapsed())">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <div class="d-flex align-content-center">
+        <mat-icon style="transform: scale(0.7);">dark_mode</mat-icon>
+        <mat-slide-toggle [checked]="lightModeChecked()" (change)="onSwitchThemeChange()" [color]="themeSwitchColor"></mat-slide-toggle>
+        <mat-icon style="transform: scale(0.7);">light_mode</mat-icon>
+    </div>
+</mat-toolbar>
+<mat-sidenav-container>
+    <mat-sidenav opened mode="side" [style.width]="sidenavWidth()">
+        <div class="sidenav-header">
+            <img src="https://viagastro.net.br/wp-content/uploads/2023/05/Profile_avatar_placeholder_large.png" [width]="profilePicSize()" [height]="profilePicSize()">
+            <div class="header-text" [ngClass]="{'hide-header-text': collapsed()}">
+                <h2>Lorem Ipsum</h2>
+                <p>Just a test</p>
+            </div>
+        </div>
+        <mat-nav-list>
+            <a class="menu-item" mat-list-item [routerLink]="item.route" routerLinkActive="selected-menu-item" #rla="routerLinkActive" [activated]="rla.isActive" *ngFor="let item of menuItems()">
+                <mat-icon [fontSet]="rla.isActive ? 'material-icons' : 'material-icons-outlined'" matListItemIcon>{{ item.icon }}</mat-icon>
+                <span matListItemTitle *ngIf="!collapsed()">{{ item.label }}</span>
+            </a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="p-3" [style.margin-left]="sidenavWidth()">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
