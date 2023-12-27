@@ -2,6 +2,7 @@ mat-card {
     box-sizing: border-box;
     border-top: solid 5px #4caf50;
     transition: 200ms;
+    min-width: 460px;
 
     img.mat-card-image {
         width: 100%;

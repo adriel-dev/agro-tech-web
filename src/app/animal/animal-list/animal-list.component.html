@@ -1,9 +1,33 @@
-<h1>Animals</h1>
-
 <div class="container-fluid">
+    <div class="d-flex align-items-center">
+        <div>
+            <h1>Animals</h1>
+        </div>
+        <div class="ms-3">
+            <mat-form-field>
+                <input type="text" matInput placeholder="Enter a name or ID">
+                <button matSuffix mat-icon-button>
+                    <mat-icon>search</mat-icon>
+                </button>
+              </mat-form-field>
+        </div>
+    </div>
+    <div class="d-flex align-items-center">
+        <div>
+            <mat-button-toggle-group name="speciesFilter" multiple (change)="onSpeciesFilterChange($event)" appearance="standard">
+                <mat-button-toggle *ngFor="let speciesItem of species" [value]="speciesItem.name">{{ speciesItem.name }}</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+        <div class="ms-auto">
+            <button mat-button color="primary" id="btnNewAnimal" class="ms-3" (click)="openNewAnimalDialog()"><mat-icon>add</mat-icon> New Animal</button>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12 mt-3" *ngFor="let animal of animals">
-            <app-animal-card [animal]="animal"></app-animal-card>
+        <app-animal-card class="mt-3 g-2 g-lg-5 col-sm-12 col-xl-6" *ngFor="let animal of animals" [animal]="animal"></app-animal-card>
+    </div>
+    <div class="mt-5">
+        <div style="min-width: 400px;">
+            <mat-paginator [length]="totalPages * pageSize" [pageSize]="pageSize" [pageSizeOptions]="[pageSize]" (page)="onPageChange($event)"/>
         </div>
     </div>
 </div>

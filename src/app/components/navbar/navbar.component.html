@@ -3,9 +3,9 @@
         <mat-icon>menu</mat-icon>
     </button>
     <div class="d-flex align-content-center">
-        <mat-icon style="transform: scale(0.7);">dark_mode</mat-icon>
+        <mat-icon class="theme-icon">dark_mode</mat-icon>
         <mat-slide-toggle [checked]="lightModeChecked()" (change)="onSwitchThemeChange()" [color]="themeSwitchColor"></mat-slide-toggle>
-        <mat-icon style="transform: scale(0.7);">light_mode</mat-icon>
+        <mat-icon class="theme-icon">light_mode</mat-icon>
     </div>
 </mat-toolbar>
 <mat-sidenav-container>
