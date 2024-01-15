@@ -1,7 +1,7 @@
 
 <mat-dialog-content>
-    <div class="d-flex justify-content-between">
-        <h2>{{ isEdit ? "Edit" : "New" }} Animal</h2>
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>{{ isEdit ? "Editar" : "Novo" }} Animal</h2>
         <button mat-icon-button mat-dialog-close (click)="onCancel()">
             <mat-icon>close</mat-icon>
         </button>
@@ -10,48 +10,62 @@
     <mat-divider class="mt-3 mb-5"></mat-divider>
 
     <form [formGroup]="animalForm">
-        <div class="row">
-            <mat-form-field class="col-sm-12 col-md-6">
-                <mat-label>Name</mat-label>
+        <div class="d-flex flex-lg-row flex-column align-items-center">
+            <div>
+                <img [src]="selectedFileUrl ?? 'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg'" width="200" height="200" class="border border-3 rounded-circle" style="object-fit: cover;">
+            </div>
+            <div class="ms-3 d-flex justify-content-center flex-column mt-sm-3">
+                <button type="button" mat-raised-button (click)="fileInput.click()" style="min-width: 270px;">
+                    Escolher arquivo <mat-icon>file_upload</mat-icon>
+                </button>
+                <input hidden (change)="onFileSelected($event)" #fileInput type="file" id="file" accept=".jpeg, .jpg, .png">
+                
+                <p *ngIf="selectedFileName">Arquivo selecionado: {{ selectedFileName }}</p>
+                <p *ngIf="selectedFileErrorMsg" style="color: #FFB80D;">{{ selectedFileErrorMsg }}</p>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <mat-form-field class="col-sm-12 col-md-6 col-xl-4">
+                <mat-label>Nome</mat-label>
                 <input matInput type="text" name="name" formControlName="name"/>
             </mat-form-field>
     
-            <mat-form-field class="col-sm-12 col-md-6">
-                <mat-label>Sex</mat-label>
+            <mat-form-field class="col-sm-12 col-md-6 col-xl-4">
+                <mat-label>Sexo</mat-label>
                 <mat-select name="sex" required="true" formControlName="sex">
-                    <mat-option value="F">Female</mat-option>
-                    <mat-option value="M">Male</mat-option>
+                    <mat-option value="F">Fêmea</mat-option>
+                    <mat-option value="M">Macho</mat-option>
                 </mat-select>
             </mat-form-field>
     
-            <mat-form-field class="col-sm-12 col-md-6">
-                <mat-label>Acquisition Date</mat-label>
-                <input matInput [matDatepicker]="acquisitionDatePicker" placeholder="Choose a date" formControlName="acquisitionDate">
+            <mat-form-field class="col-sm-12 col-md-6 col-xl-4">
+                <mat-label>Data da aquisição</mat-label>
+                <input matInput [matDatepicker]="acquisitionDatePicker" placeholder="Escolha uma data" formControlName="acquisitionDate">
                 <mat-datepicker-toggle matSuffix [for]="acquisitionDatePicker"></mat-datepicker-toggle>
                 <mat-datepicker name="acquisitionDate" #acquisitionDatePicker disabled="false"/>
             </mat-form-field>
     
-            <mat-form-field class="col-sm-12 col-md-6">
-                <mat-label>Sale Date</mat-label>
-                <input matInput [matDatepicker]="saleDatePicker" placeholder="Choose a date" formControlName="saleDate">
+            <mat-form-field class="col-sm-12 col-md-6 col-xl-4">
+                <mat-label>Data da venda</mat-label>
+                <input matInput [matDatepicker]="saleDatePicker" placeholder="Escolha uma data" formControlName="saleDate">
                 <mat-datepicker-toggle matSuffix [for]="saleDatePicker"></mat-datepicker-toggle>
                 <mat-datepicker name="saleDate" #saleDatePicker disabled="false" />
             </mat-form-field>
     
-            <mat-form-field class="col-sm-12 col-md-6">
-                <mat-label>Acquisition Value</mat-label>
+            <mat-form-field class="col-sm-12 col-md-6 col-xl-4">
+                <mat-label>Valor da aquisição</mat-label>
                 <span matPrefix><mat-icon>attach_money</mat-icon></span>
                 <input matInput type="text" name="acquisitionValue" formControlName="acquisitionValue" currencyMask/>
             </mat-form-field>
     
-            <mat-form-field class="col-sm-12 col-md-6">
-                <mat-label>Sale Value</mat-label>
+            <mat-form-field class="col-sm-12 col-md-6 col-xl-4">
+                <mat-label>Valor da venda</mat-label>
                 <span matPrefix><mat-icon>attach_money</mat-icon></span>
                 <input matInput type="text" name="saleValue" formControlName="saleValue" currencyMask/>
             </mat-form-field>
     
-            <mat-form-field class="col-sm-12 col-md-6">
-                <mat-label>Breed</mat-label>
+            <mat-form-field class="col-sm-12 col-md-6 col-xl-4">
+                <mat-label>Raça</mat-label>
                 <mat-select name="breed" formControlName="breed">
                     <mat-option *ngFor="let breed of breeds" [value]="breed">
                         {{ breed }}
@@ -66,6 +80,6 @@
 <mat-divider class=""></mat-divider>
 
 <mat-dialog-actions class="d-flex justify-content-end p-3">
-    <button mat-raised-button color="accent" (click)="onCancel()">Cancel</button>
-    <button mat-raised-button color="primary" class="ms-2" (click)="onSubmit()" [disabled]="animalForm.invalid">Save</button>
+    <button mat-raised-button color="accent" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" class="ms-2" (click)="onSubmit()" [disabled]="animalForm.invalid">Salvar</button>
 </mat-dialog-actions>

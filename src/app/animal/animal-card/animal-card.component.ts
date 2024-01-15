@@ -27,7 +27,7 @@ export class AnimalCardComponent {
       position: { 
         top: '10vh' 
       }, 
-      width:'50vw',
+      width:'80vw',
       data: this.animal
     }
     let dialogRef = this.dialog.open(AnimalFormComponent, dialogConfigs);

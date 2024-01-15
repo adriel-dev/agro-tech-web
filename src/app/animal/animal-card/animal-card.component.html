@@ -21,19 +21,19 @@
             <div class="row">
                 <div class="col-lg-12 col-xxl-6 d-flex flex-row">
                     <mat-icon class="me-1">calendar_month</mat-icon> 
-                    <p>Acquisition Date: {{ animal.acquisitionDate | date : 'dd/MM/YYYY' }}</p>
+                    <p>Data da aquisição: {{ animal.acquisitionDate | date : 'dd/MM/YYYY' }}</p>
                 </div>
                 <div class="col-lg-12 col-xxl-6 d-flex flex-row">
                     <mat-icon class="me-1">attach_money</mat-icon>
-                    <p>Acquisition Value: {{ animal.acquisitionValue | currency:'BRL':'symbol':'1.2-2'  }}</p>
+                    <p>Valor da aquisição: {{ animal.acquisitionValue | currency:'BRL':'symbol':'1.2-2'  }}</p>
                 </div>
                 <div class="col-lg-12 col-xxl-6 d-flex flex-row">
                     <mat-icon class="me-1">calendar_month</mat-icon>
-                    <p>Sale Date: {{ animal.saleDate | date : 'dd/MM/YYYY' }}</p>
+                    <p>Data da venda: {{ animal.saleDate | date : 'dd/MM/YYYY' }}</p>
                 </div>
                 <div class="col-lg-12 col-xxl-6 d-flex flex-row">
                     <mat-icon class="me-1">sell</mat-icon>
-                    <p>Sale Value: {{ animal.saleValue | currency:'BRL':'symbol':'1.2-2' }}</p>
+                    <p>Valor da venda: {{ animal.saleValue | currency:'BRL':'symbol':'1.2-2' }}</p>
                 </div>
             </div>
         </div>

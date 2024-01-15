@@ -16,6 +16,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { NgxCurrencyDirective } from 'ngx-currency';
 
@@ -45,6 +46,7 @@ import { AnimalFormComponent } from './animal-form/animal-form.component';
     MatDatepickerModule,
     MatNativeDateModule,
     MatDividerModule,
+    MatAutocompleteModule,
     NgxCurrencyDirective
   ]
 })

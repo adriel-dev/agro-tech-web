@@ -10,7 +10,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 })
 export class AnimalFormComponent implements OnInit {
 
-  breeds = ["Poodle", "Labrador", "Golden", "Shih Tzu", "Siamese"];
+  breeds = ["Poodle", "Labrador", "Golden", "Shih Tzu", "Siamês"];
 
   isEdit = false
 
@@ -52,11 +52,41 @@ export class AnimalFormComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  removeNonNumericCharacteres(event: Event): void {
+  selectedFileName: string = '';
+  selectedFileUrl: string | ArrayBuffer | null = null;
+  selectedFileErrorMsg: string = "";
+
+  onFileSelected(event: any): void {
     const input = event.target as HTMLInputElement;
-    const inputValue = input.value;
-    const numericValue = inputValue.replace(/[^0-9.,]/g, '');
-    input.value = numericValue;
+    const file = input.files?.[0]; // obtém o primeiro arquivo selecionado
+
+    if (file) {
+      // Verifica o tipo do arquivo (aceita apenas JPEG, JPG ou PNG)
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        this.selectedFileErrorMsg = "Formato de arquivo inválido. Por favor, selecione um arquivo JPEG, JPG ou PNG."
+        return;
+      }
+
+      // Verifica o tamanho do arquivo (por exemplo, limitando a 1 MB)
+      const maxSize = 4096 * 1024; // 1 MB em bytes
+      if (file.size > maxSize) {
+        this.selectedFileErrorMsg = "Tamanho do arquivo excede 4 MB. Por favor, selecione um arquivo menor."
+        return;
+      }
+
+      // Armazena o nome do arquivo para exibir no HTML
+      this.selectedFileName = file.name;
+
+      // Converte o arquivo em uma URL para exibir a imagem
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      this.selectedFileErrorMsg = ""
+    }
   }
+
 
 }

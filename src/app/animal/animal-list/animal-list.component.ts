@@ -39,10 +39,10 @@ export class AnimalListComponent implements OnInit {
 
   loadSpecies() {
     this.species = [
-      new Species("", "Equine"),
-      new Species("", "Bovine"),
-      new Species("", "Caprine"),
-      new Species("", "Ovine"),
+      new Species("", "Equino"),
+      new Species("", "Bovino"),
+      new Species("", "Caprino"),
+      new Species("", "Ovino"),
     ]
   }
 
@@ -53,7 +53,7 @@ export class AnimalListComponent implements OnInit {
       position: { 
         top: '10vh' 
       }, 
-      width:'50vw'
+      width:'80vw'
     }
     let dialogRef = this.dialog.open(AnimalFormComponent, dialogConfigs);
   }
@@ -65,8 +65,17 @@ export class AnimalListComponent implements OnInit {
     this.loadAnimals(this.currentPage, this.pageSize);
   }
 
-  onSpeciesFilterChange(event: MatButtonToggleChange) {
-    console.log(event.value);
+  onSpeciesFilterChange(event: any) {
+    this.selectedSpeciesFilter = event;
+    console.log(this.selectedSpeciesFilter)
+  }
+
+  onSpeciesFilter(event: any) {
+    event.stopPropagation();
+  }
+
+  onAnimalNameOrIdFilter(event: any) {
+    event.stopPropagation();
   }
 
 }

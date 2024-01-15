@@ -1,5 +1,7 @@
-import { Component, computed, signal, Renderer2, Inject, Output, EventEmitter } from '@angular/core';
+import { Component, computed, signal, Renderer2, Inject, Output, EventEmitter, HostListener } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+
 
 export type MenuItem = {
   icon: string;
@@ -28,23 +30,33 @@ export class NavbarComponent {
 
   menuItems = signal<MenuItem[]>([
     {
-      icon: 'analytics',
-      label: 'Dashboard',
+      icon: 'dashboard',
+      label: 'Painel',
       route: 'dashboard'
     },
     {
-      icon: 'list_alt',
-      label: 'Animals',
+      icon: 'pets',
+      label: 'Animais',
       route: 'animals'
     },
     {
-      icon: 'monitor_heart',
-      label: 'Monitorings',
-      route: 'monitorings'
+      icon: 'person',
+      label: 'Funcionários',
+      route: 'employees'
+    },
+    {
+      icon: 'inventory',
+      label: 'Estoque',
+      route: 'stock'
+    },
+    {
+      icon: 'warehouse',
+      label: 'Galpões',
+      route: 'warehouses'
     }
   ]);
 
-  constructor(@Inject(DOCUMENT) private document: Document, private render: Renderer2) {
+  constructor(@Inject(DOCUMENT) private document: Document, private render: Renderer2, private breakpointObserver: BreakpointObserver) {
 
   }
 
@@ -52,6 +64,18 @@ export class NavbarComponent {
     this.lightModeChecked.set(!this.lightModeChecked())
     let theme = this.lightModeChecked() ? 'light' : 'dark';
     this.themeChange.emit(theme)
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.breakpointObserver.observe([Breakpoints.Small, Breakpoints.XSmall])
+      .subscribe(result => {
+        this.collapsed.set(result.matches);
+      });
   }
 
 }
