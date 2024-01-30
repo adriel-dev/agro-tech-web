@@ -1,6 +1,8 @@
 import { Component, computed, signal, Renderer2, Inject, Output, EventEmitter, HostListener } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { NavigationEnd, Router } from '@angular/router';
+import { AuthService } from 'src/app/pages/login/auth.service';
 
 
 export type MenuItem = {
@@ -25,6 +27,8 @@ export class NavbarComponent {
   profilePicSize = computed(() => this.collapsed() ? '32' : '100')
 
   themeSwitchColor = computed(() => this.lightModeChecked() ? 'primary' : 'accent')
+
+  themeIconsColor = computed(() => this.lightModeChecked() ? 'text-dark' : 'text-white')
 
   @Output() themeChange = new EventEmitter<string>();
 
@@ -56,8 +60,22 @@ export class NavbarComponent {
     }
   ]);
 
-  constructor(@Inject(DOCUMENT) private document: Document, private render: Renderer2, private breakpointObserver: BreakpointObserver) {
 
+  isLoginPage: boolean = false;
+
+  constructor(
+    @Inject(DOCUMENT) 
+    private document: Document, 
+    private render: Renderer2, 
+    private breakpointObserver: BreakpointObserver,
+    private router: Router,
+    private authService: AuthService
+  ) {
+    this.router.events.subscribe({
+      next: (event) => {
+        this.isLoginPage = (event instanceof NavigationEnd) && (event.url === '/login');
+      }
+    })
   }
 
   onSwitchThemeChange() {
@@ -76,6 +94,12 @@ export class NavbarComponent {
       .subscribe(result => {
         this.collapsed.set(result.matches);
       });
+  }
+
+  onLogout() {
+    this.authService.isUserAuthenticated = false;
+    localStorage.removeItem('jwtToken');
+    this.router.navigate(['/login']);
   }
 
 }

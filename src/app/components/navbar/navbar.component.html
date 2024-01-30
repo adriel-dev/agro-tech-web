@@ -3,9 +3,20 @@
         <mat-icon>menu</mat-icon>
     </button>
     <div class="d-flex align-content-center">
-        <mat-icon class="theme-icon">dark_mode</mat-icon>
-        <mat-slide-toggle [checked]="lightModeChecked()" (change)="onSwitchThemeChange()" [color]="themeSwitchColor"></mat-slide-toggle>
-        <mat-icon class="theme-icon">light_mode</mat-icon>
+        <button mat-icon-button [matMenuTriggerFor]="settings" aria-label="Example icon-button with a menu">
+            <mat-icon>settings</mat-icon>
+        </button>
+          <mat-menu #settings="matMenu" xPosition="before">
+            <div class="d-flex justify-content-center p-1" [ngClass]="themeIconsColor()" (click)="$event.stopPropagation()">
+                <mat-icon class="theme-icon">dark_mode</mat-icon>
+                <mat-slide-toggle [checked]="lightModeChecked()" (change)="onSwitchThemeChange()" [color]="themeSwitchColor"></mat-slide-toggle>
+                <mat-icon class="theme-icon">light_mode</mat-icon>
+            </div>
+            <mat-divider class="my-2"></mat-divider>
+            <div class="d-flex justify-content-center p-1" (click)="$event.stopPropagation()">
+                <button mat-flat-button (click)="onLogout()">Logout <mat-icon>logout</mat-icon></button>
+            </div>
+          </mat-menu>
     </div>
 </mat-toolbar>
 <mat-sidenav-container>
@@ -13,8 +24,8 @@
         <div class="sidenav-header">
             <img src="https://viagastro.net.br/wp-content/uploads/2023/05/Profile_avatar_placeholder_large.png" [width]="profilePicSize()" [height]="profilePicSize()">
             <div class="header-text" [ngClass]="{'hide-header-text': collapsed()}">
-                <h2>Lorem Ipsum</h2>
-                <p>Just a test</p>
+                <h2>Adriel Felix</h2>
+                <p>Fazenda dois irmãos</p>
             </div>
         </div>
         <mat-nav-list>

@@ -32,9 +32,16 @@ export class AnimalListComponent implements OnInit {
   }
 
   loadAnimals(pageNumber: number = 1, pageSize: number = 10) {
-    const res = this.animalService.listAllAnimals();
-    this.animals = res.animals
-    this.totalPages = res.totalPages
+    this.animalService.findAllAnimals().subscribe({
+      next: (page) => {
+        this.animals = page.content
+        this.totalPages = page.totalPages
+      },
+      error: (error) => {
+        console.error("Erro durante chamada HTTP:", error);
+      }
+    }
+    );
   }
 
   loadSpecies() {
@@ -59,7 +66,6 @@ export class AnimalListComponent implements OnInit {
   }
 
   onPageChange(event: PageEvent) {
-    console.log(`Page: ${event.length}`)
     this.currentPage = event.pageIndex + 1;
     this.pageSize = event.pageSize;
     this.loadAnimals(this.currentPage, this.pageSize);
@@ -67,7 +73,6 @@ export class AnimalListComponent implements OnInit {
 
   onSpeciesFilterChange(event: any) {
     this.selectedSpeciesFilter = event;
-    console.log(this.selectedSpeciesFilter)
   }
 
   onSpeciesFilter(event: any) {

@@ -33,3 +33,13 @@ export enum SexEnum {
     M = 'M',
     F = 'F'
 }
+
+export class PagedAnimals {
+  constructor(
+    public content: Animal[],
+    public totalPages: number,
+    public totalElements: number,
+    public pageSize: number,
+    public pageNumber: number
+  ){}
+}

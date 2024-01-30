@@ -21,8 +21,8 @@ export class AnimalFormComponent implements OnInit {
     this.animalForm = this.formBuilder.group({
       name: new FormControl(),
       sex: new FormControl('', Validators.required),
-      acquisitionDate: new FormControl({value: '', disabled: true}),
-      saleDate: new FormControl({value: '', disabled: true}),
+      acquisitionDate: new FormControl(''),
+      saleDate: new FormControl(''),
       acquisitionValue: new FormControl(0, Validators.required),
       saleValue: new FormControl(0, Validators.required),
       breed: new FormControl(null, Validators.required)
@@ -44,8 +44,6 @@ export class AnimalFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("Is form valid? ");
-    console.log(this.animalForm.valid);
   }
 
   onCancel() {
