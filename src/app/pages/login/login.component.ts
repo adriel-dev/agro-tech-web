@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Login, LoginResponse } from './types/login';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import * as jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-login',
@@ -28,6 +29,11 @@ export class LoginComponent {
     this.authService.login(this.login).subscribe({
       next: (res) => {
         let response = res as LoginResponse
+        let decodedToken: any = jwt_decode.jwtDecode(response.token);
+        let user = decodedToken.sub;
+        let farmId = decodedToken.farmId;
+        localStorage.setItem('user', user);
+        localStorage.setItem('farmId', farmId);
         localStorage.setItem('jwtToken', response.token);
       },
       error: (error) => {

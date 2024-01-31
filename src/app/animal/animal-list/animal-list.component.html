@@ -40,7 +40,7 @@
     </div>
     <div class="mt-5">
         <div style="min-width: 400px;">
-            <mat-paginator [length]="totalPages * pageSize" [pageSize]="pageSize" [pageSizeOptions]="[10]" (page)="onPageChange($event)"/>
+            <mat-paginator [length]="animals.length" [pageSize]="pageSize" [pageSizeOptions]="[10]" (page)="onPageChange($event)"/>
         </div>
     </div>
 </div>

@@ -18,17 +18,19 @@ export type MenuItem = {
 })
 export class NavbarComponent {
 
-  lightModeChecked = signal(false)
+  lightModeChecked = signal(false);
 
-  collapsed = signal(false)
+  collapsed = signal(false);
 
   sidenavWidth = computed(() => this.collapsed() ? '65px' : '250px');
 
-  profilePicSize = computed(() => this.collapsed() ? '32' : '100')
+  profilePicSize = computed(() => this.collapsed() ? '32' : '100');
 
-  themeSwitchColor = computed(() => this.lightModeChecked() ? 'primary' : 'accent')
+  themeSwitchColor = computed(() => this.lightModeChecked() ? 'primary' : 'accent');
 
-  themeIconsColor = computed(() => this.lightModeChecked() ? 'text-dark' : 'text-white')
+  themeIconsColor = computed(() => this.lightModeChecked() ? 'text-dark' : 'text-white');
+
+  loggedUser = localStorage.getItem('user');
 
   @Output() themeChange = new EventEmitter<string>();
 
