@@ -33,13 +33,15 @@ import { provideEnvironmentNgxCurrency, NgxCurrencyInputMode } from 'ngx-currenc
 import { LoginComponent } from './pages/login/login.component';
 import { LayoutComponent } from './pages/layout/layout.component';
 import { TokenInterceptor } from './interceptor/token.interceptor';
+import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     LoginComponent,
-    LayoutComponent
+    LayoutComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,

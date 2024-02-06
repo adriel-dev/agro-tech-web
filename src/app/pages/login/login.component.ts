@@ -4,6 +4,7 @@ import { Login, LoginResponse } from './types/login';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import * as jwt_decode from 'jwt-decode';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,10 @@ export class LoginComponent {
   login: Login = new Login();
   loginForm!: FormGroup
   hidePassword = true;
+
+  errorMsg: string = "";
+  alertType: string = "";
+  displayAlert: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router){
     this.loginForm = this.formBuilder.group({
@@ -37,13 +42,26 @@ export class LoginComponent {
         localStorage.setItem('jwtToken', response.token);
       },
       error: (error) => {
-        console.error(error);
+        if(error.message.includes("Unknown Error")) {
+          this.displayAlertMessage("Erro ao se conectar com o servidor.", 'danger', 5000);
+        } else if(error.message.includes("403")) {
+          this.displayAlertMessage("Usuário ou senha incorreto(s).", 'warning', 5000);
+        }
       },
       complete: () => {
         this.authService.isUserAuthenticated = true;
         this.router.navigate(["/animals"]);
       },
     });
+  }
+
+  private displayAlertMessage(errorMsg: string, type: string, timeout: number) {
+    this.errorMsg = errorMsg;
+    this.alertType = type;
+    this.displayAlert = true;
+    setTimeout(() => {
+      this.displayAlert = false;
+    }, timeout);
   }
 
 }
