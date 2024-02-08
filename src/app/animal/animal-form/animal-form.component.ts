@@ -2,6 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Animal } from '../model/Animal';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { BreedService } from 'src/app/breed/breed.service';
+import { Breed } from 'src/app/breed/model/Breed';
 
 @Component({
   selector: 'app-animal-form',
@@ -10,13 +12,18 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 })
 export class AnimalFormComponent implements OnInit {
 
-  breeds = ["Poodle", "Labrador", "Golden", "Shih Tzu", "Siamês"];
+  breeds: Breed[] = [];
 
   isEdit = false
 
   animalForm!: FormGroup;
 
-  constructor(public dialogRef: MatDialogRef<AnimalFormComponent>, @Inject(MAT_DIALOG_DATA) public animal: Animal, private formBuilder: FormBuilder){
+  constructor(
+    public dialogRef: MatDialogRef<AnimalFormComponent>, 
+    @Inject(MAT_DIALOG_DATA) public animal: Animal, 
+    private formBuilder: FormBuilder,
+    private breedService: BreedService
+  ){
     this.isEdit = animal !== null ? true : false
     this.animalForm = this.formBuilder.group({
       name: new FormControl(),
@@ -30,17 +37,27 @@ export class AnimalFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.isEdit) {
-      this.animalForm.setValue({
-        name: this.animal.name,
-        sex: this.animal.sex,
-        acquisitionDate: this.animal.acquisitionDate,
-        saleDate: this.animal.saleDate,
-        acquisitionValue: this.animal.acquisitionValue,
-        saleValue: this.animal.saleValue,
-        breed: this.animal.breed.name
-      });
-    }
+    this.breedService.findAllBreeds().subscribe({
+      next: (breeds) => {
+        this.breeds = breeds;
+      },
+      error: (error) => {
+
+      },
+      complete: () => {
+        if(this.isEdit) {
+          this.animalForm.setValue({
+            name: this.animal.name,
+            sex: this.animal.sex,
+            acquisitionDate: this.animal.acquisitionDate,
+            saleDate: this.animal.saleDate,
+            acquisitionValue: this.animal.acquisitionValue,
+            saleValue: this.animal.saleValue,
+            breed: this.animal.breed.id
+          });
+        }
+      }
+    });
   }
 
   onSubmit() {

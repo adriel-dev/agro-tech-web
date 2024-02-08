@@ -67,8 +67,8 @@
             <mat-form-field class="col-sm-12 col-md-6 col-xl-4">
                 <mat-label>Raça</mat-label>
                 <mat-select name="breed" formControlName="breed">
-                    <mat-option *ngFor="let breed of breeds" [value]="breed">
-                        {{ breed }}
+                    <mat-option *ngFor="let breed of breeds" [value]="breed.id">
+                        {{ breed.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
