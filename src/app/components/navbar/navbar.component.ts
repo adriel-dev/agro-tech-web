@@ -100,7 +100,9 @@ export class NavbarComponent {
 
   onLogout() {
     this.authService.isUserAuthenticated = false;
-    localStorage.removeItem('jwtToken');
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("farmId");
+    localStorage.removeItem("user");
     this.router.navigate(['/login']);
   }
 

@@ -1,9 +1,9 @@
 <mat-card class="animal-card">
     <mat-card-header class="d-flex">
-        <img mat-card-avatar src="https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg">
+        <img mat-card-avatar [src]="animalImageBase64 ?? '../../../assets/img/placeholder/placeholder-image.jpg'">
         <mat-card-title class="d-flex flex-row">
-            <p class="m-0" style="white-space: nowrap">{{ animal.name ?? '------------' }}</p>
-            <mat-icon>{{ animal.sex == 'F' ? 'male' : 'female' }}</mat-icon>
+            <p class="m-0" style="white-space: nowrap">{{ animal.name ?? animal.externalId }}</p>
+            <mat-icon>{{ animal.sex == 'M' ? 'male' : 'female' }}</mat-icon>
         </mat-card-title>
         <mat-card-subtitle>{{ animal.breed.name }}</mat-card-subtitle>
         <button mat-icon-button class="ms-auto" (click)="openEditAnimalDialog()">

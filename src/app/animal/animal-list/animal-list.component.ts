@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Animal } from '../model/Animal';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Animal, FindAllAnimalsResponse } from '../model/Animal';
 import { Species } from 'src/app/species/model/Species';
 import { AnimalService } from '../animal.service';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { AnimalFormComponent } from '../animal-form/animal-form.component';
+import { ToastrService } from 'ngx-toastr';
+import { SpeciesService } from 'src/app/species/species.service';
 
 @Component({
   selector: 'app-animal-list',
@@ -14,30 +16,42 @@ import { AnimalFormComponent } from '../animal-form/animal-form.component';
 })
 export class AnimalListComponent implements OnInit {
 
-  animals: Animal[] = []
+  animals: FindAllAnimalsResponse[] = [];
 
-  species: Species[] = []
+  species: Species[] = [];
 
-  currentPage = 1
-  pageSize = 10
-  totalPages = 0
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  selectedSpeciesFilter: string[] = []
+  pageIndex = 0;
+  pageSize = 10;
+  totalPages = 0;
+  length = 0;
 
-  constructor(private animalService: AnimalService, private dialog: MatDialog) { }
+  selectedSpeciesFilter: string[] = [];
+
+  constructor(
+    private animalService: AnimalService,
+    private speciesService: SpeciesService, 
+    private dialog: MatDialog, 
+    private toastService: ToastrService
+  ) { }
 
   ngOnInit() {
     this.loadAnimals();
     this.loadSpecies();
   }
 
-  loadAnimals(pageNumber: number = 1, pageSize: number = 10) {
-    this.animalService.findAllAnimals().subscribe({
+  loadAnimals(pageNumber: number = 0, pageSize: number = 10) {
+    this.animalService.findAllAnimals(pageNumber, pageSize).subscribe({
       next: (page) => {
-        this.animals = page.content
-        this.totalPages = page.totalPages
+        this.animals = page.content;
+        this.pageIndex = pageNumber;
+        this.pageSize = pageSize;
+        this.totalPages = page.totalPages;
+        this.length = page.totalElements;
       },
       error: (error) => {
+        this.toastService.error("ERRO AO LISTAR ANIMAIS!");
         console.error("Erro durante chamada HTTP:", error);
       }
     }
@@ -45,12 +59,18 @@ export class AnimalListComponent implements OnInit {
   }
 
   loadSpecies() {
-    this.species = [
-      new Species("", "Equino"),
-      new Species("", "Bovino"),
-      new Species("", "Caprino"),
-      new Species("", "Ovino"),
-    ]
+    this.speciesService.findAllSpecies().subscribe({
+      next: (species) => {
+        this.species = species;
+      },
+      error: (error) => {
+        this.toastService.error("ERRO AO CARREGAR ESPÉCIES!")
+        console.error(error);
+      },
+      complete: () => {
+
+      }
+    });
   }
 
   openNewAnimalDialog() {
@@ -60,15 +80,21 @@ export class AnimalListComponent implements OnInit {
       position: { 
         top: '10vh' 
       }, 
-      width:'80vw'
+      width:'80vw',
+      data: null
     }
     let dialogRef = this.dialog.open(AnimalFormComponent, dialogConfigs);
+    dialogRef.afterClosed().subscribe( result => {
+      if(result === "success") {
+        this.loadAnimals(this.pageIndex, this.pageSize);
+      }
+    });
   }
 
   onPageChange(event: PageEvent) {
-    this.currentPage = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.loadAnimals(this.currentPage, this.pageSize);
+    this.loadAnimals(this.pageIndex, this.pageSize);
   }
 
   onSpeciesFilterChange(event: any) {
@@ -81,6 +107,10 @@ export class AnimalListComponent implements OnInit {
 
   onAnimalNameOrIdFilter(event: any) {
     event.stopPropagation();
+  }
+
+  onEditDialogClose() {
+    this.loadAnimals(this.pageIndex, this.pageSize);
   }
 
 }

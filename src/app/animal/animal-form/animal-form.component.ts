@@ -1,9 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Animal } from '../model/Animal';
+import { Animal, SaveAnimalRequest } from '../model/Animal';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BreedService } from 'src/app/breed/breed.service';
 import { Breed } from 'src/app/breed/model/Breed';
+import { AnimalService } from '../animal.service';
+import { Species } from 'src/app/species/model/Species';
+import { Farm } from 'src/app/farm/model/Farm';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-animal-form',
@@ -18,13 +22,21 @@ export class AnimalFormComponent implements OnInit {
 
   animalForm!: FormGroup;
 
+  selectedFile: File | undefined;
+  selectedFileName: string = '';
+  selectedFileBlob!: Blob;
+  selectedFileUrl: string | ArrayBuffer | null = null;
+  selectedFileErrorMsg: string = "";
+
   constructor(
     public dialogRef: MatDialogRef<AnimalFormComponent>, 
-    @Inject(MAT_DIALOG_DATA) public animal: Animal, 
+    @Inject(MAT_DIALOG_DATA) public animalData: { animal: Animal, imageBase64: string }, 
     private formBuilder: FormBuilder,
-    private breedService: BreedService
+    private animalService: AnimalService,
+    private breedService: BreedService,
+    private toastService: ToastrService
   ){
-    this.isEdit = animal !== null ? true : false
+    this.isEdit = this.animalData !== null ? true : false
     this.animalForm = this.formBuilder.group({
       name: new FormControl(),
       sex: new FormControl('', Validators.required),
@@ -35,7 +47,7 @@ export class AnimalFormComponent implements OnInit {
       breed: new FormControl(null, Validators.required)
     });
   }
-
+  
   ngOnInit(): void {
     this.breedService.findAllBreeds().subscribe({
       next: (breeds) => {
@@ -47,56 +59,115 @@ export class AnimalFormComponent implements OnInit {
       complete: () => {
         if(this.isEdit) {
           this.animalForm.setValue({
-            name: this.animal.name,
-            sex: this.animal.sex,
-            acquisitionDate: this.animal.acquisitionDate,
-            saleDate: this.animal.saleDate,
-            acquisitionValue: this.animal.acquisitionValue,
-            saleValue: this.animal.saleValue,
-            breed: this.animal.breed.id
+            name: this.animalData.animal.name,
+            sex: this.animalData.animal.sex,
+            acquisitionDate: this.animalData.animal.acquisitionDate,
+            saleDate: this.animalData.animal.saleDate,
+            acquisitionValue: this.animalData.animal.acquisitionValue,
+            saleValue: this.animalData.animal.saleValue,
+            breed: this.animalData.animal.breed.id
           });
+          this.selectedFileUrl = this.animalData.imageBase64
         }
       }
     });
   }
 
   onSubmit() {
+    let animalFormValues = this.animalForm.value;
+    let body: Animal | SaveAnimalRequest
+    if(this.isEdit) {
+      body = new Animal(
+        this.animalData.animal.id,
+        this.animalData.animal.externalId,
+        animalFormValues.name, 
+        animalFormValues.sex, 
+        animalFormValues.acquisitionDate, 
+        animalFormValues.saleDate, 
+        animalFormValues.acquisitionValue, 
+        animalFormValues.saleValue, 
+        new Breed(animalFormValues.breed), 
+        new Farm(localStorage.getItem("farmId")!)
+      );
+      const formData = new FormData();
+      const data = new Blob([JSON.stringify(body)], { type: "application/json" });
+      formData.append("data", data);
+      if(this.selectedFile) formData.append("image", this.selectedFile, this.selectedFile.name);
+      this.animalService.editAnimal(formData, this.animalData.animal.id).subscribe({
+        next: (res) => {
+          this.toastService.success("ANIMAL EDITADO COM SUCESSO!");
+          this.dialogRef.close("success");
+        },
+        error: (error) => {
+          this.toastService.error("ERRO AO CADASTRAR ANIMAL!")
+          console.error(error);
+        },
+        complete: () => {
+        }
+      });
+    } else {
+      body = new SaveAnimalRequest(
+        animalFormValues.name, 
+        animalFormValues.sex, 
+        animalFormValues.acquisitionDate, 
+        animalFormValues.saleDate, 
+        animalFormValues.acquisitionValue, 
+        animalFormValues.saleValue, 
+        animalFormValues.breed, 
+        localStorage.getItem("farmId")
+      );
+      const formData = new FormData();
+      const data = new Blob([JSON.stringify(body)], { type: "application/json" });
+      formData.append("data", data);
+      if(this.selectedFile) formData.append("image", this.selectedFile, this.selectedFile.name);
+      this.animalService.saveAnimal(formData).subscribe({
+        next: (res) => {
+          this.toastService.success("ANIMAL CADASTRADO COM SUCESSO!", undefined);
+          this.dialogRef.close("success");
+        },
+        error: (error) => {
+          this.toastService.error("ERRO AO CADASTRAR ANIMAL!")
+          console.error(error);
+        },
+        complete: () => {
+
+        }
+      });;
+    }
   }
 
   onCancel() {
     this.dialogRef.close();
   }
 
-  selectedFileName: string = '';
-  selectedFileUrl: string | ArrayBuffer | null = null;
-  selectedFileErrorMsg: string = "";
-
   onFileSelected(event: any): void {
     const input = event.target as HTMLInputElement;
-    const file = input.files?.[0]; // obtém o primeiro arquivo selecionado
+    const file = input.files?.[0];
+    this.selectedFile = file;
+
+    if (!file) {
+      return;
+    }
 
     if (file) {
-      // Verifica o tipo do arquivo (aceita apenas JPEG, JPG ou PNG)
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
       if (!allowedTypes.includes(file.type)) {
         this.selectedFileErrorMsg = "Formato de arquivo inválido. Por favor, selecione um arquivo JPEG, JPG ou PNG."
         return;
       }
 
-      // Verifica o tamanho do arquivo (por exemplo, limitando a 1 MB)
-      const maxSize = 4096 * 1024; // 1 MB em bytes
+      const maxSize = 4 * 1024 * 1024;
       if (file.size > maxSize) {
         this.selectedFileErrorMsg = "Tamanho do arquivo excede 4 MB. Por favor, selecione um arquivo menor."
         return;
       }
 
-      // Armazena o nome do arquivo para exibir no HTML
       this.selectedFileName = file.name;
 
-      // Converte o arquivo em uma URL para exibir a imagem
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.selectedFileUrl = e.target.result;
+        this.selectedFileBlob = new Blob([file], { type: file.type });
       };
       reader.readAsDataURL(file);
       this.selectedFileErrorMsg = ""

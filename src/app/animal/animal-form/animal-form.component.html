@@ -12,7 +12,7 @@
     <form [formGroup]="animalForm">
         <div class="d-flex flex-lg-row flex-column align-items-center">
             <div>
-                <img [src]="selectedFileUrl ?? 'https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg'" width="200" height="200" class="border border-3 rounded-circle" style="object-fit: cover;">
+                <img [src]="selectedFileUrl ?? '../../../assets/img/placeholder/placeholder-image.jpg'" width="200" height="200" class="border border-3 rounded-circle" style="object-fit: cover;">
             </div>
             <div class="ms-3 d-flex justify-content-center flex-column mt-sm-3">
                 <button type="button" mat-raised-button (click)="fileInput.click()" style="min-width: 270px;">

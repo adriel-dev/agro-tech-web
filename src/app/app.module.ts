@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms'
 
@@ -33,15 +33,17 @@ import { provideEnvironmentNgxCurrency, NgxCurrencyInputMode } from 'ngx-currenc
 import { LoginComponent } from './pages/login/login.component';
 import { LayoutComponent } from './pages/layout/layout.component';
 import { TokenInterceptor } from './interceptor/token.interceptor';
-import { AlertComponent } from './components/alert/alert.component';
+import { ToastContainerDirective, provideToastr } from 'ngx-toastr';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+
+import { PtMatPaginatorIntl } from "./components/paginator/PtMatPaginator";
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     LoginComponent,
-    LayoutComponent,
-    AlertComponent
+    LayoutComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,8 @@ import { AlertComponent } from './components/alert/alert.component';
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    ToastContainerDirective,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },
@@ -82,7 +85,10 @@ import { AlertComponent } from './components/alert/alert.component';
         inputMode: NgxCurrencyInputMode.Financial
     }
     ),
-    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
+    provideAnimations(),
+    provideToastr(),
+    { provide: MatPaginatorIntl, useClass: PtMatPaginatorIntl }
   ],
   bootstrap: [AppComponent]
 })
