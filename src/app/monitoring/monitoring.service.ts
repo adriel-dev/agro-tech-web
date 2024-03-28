@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/enviroments/enviroment';
-import { Monitoring } from './model/Monitoring';
+import { Monitoring, SaveMonitoringRequest } from './model/Monitoring';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,13 @@ export class MonitoringService {
   constructor(private httpClient: HttpClient) { }
 
   findMonitoringsByAnimalId(animalId: string): Observable<Monitoring[]> {
-    let findMonirotringsUrl = `${this.URL}/find/animal/${animalId}`;
+    const findMonirotringsUrl = `${this.URL}/find/animal/${animalId}`;
     return this.httpClient.get<Monitoring[]>(findMonirotringsUrl);
+  }
+
+  saveMonitoring(monitoring: SaveMonitoringRequest): Observable<Monitoring> {
+    const saveMonitoringUrl = `${this.URL}/save`;
+    return this.httpClient.post<Monitoring>(saveMonitoringUrl, monitoring);
   }
 
 }

@@ -8,6 +8,7 @@ import { AnimalService } from '../animal.service';
 import { Species } from 'src/app/species/model/Species';
 import { Farm } from 'src/app/farm/model/Farm';
 import { ToastrService } from 'ngx-toastr';
+import { SpeciesService } from 'src/app/species/species.service';
 
 @Component({
   selector: 'app-animal-form',
@@ -17,6 +18,8 @@ import { ToastrService } from 'ngx-toastr';
 export class AnimalFormComponent implements OnInit {
 
   breeds: Breed[] = [];
+
+  species: Species[] = []
 
   isEdit = false
 
@@ -33,6 +36,7 @@ export class AnimalFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public animalData: { animal: Animal, imageBase64: string }, 
     private formBuilder: FormBuilder,
     private animalService: AnimalService,
+    private speciesService: SpeciesService,
     private breedService: BreedService,
     private toastService: ToastrService
   ){
@@ -44,30 +48,45 @@ export class AnimalFormComponent implements OnInit {
       saleDate: new FormControl(''),
       acquisitionValue: new FormControl(0, Validators.required),
       saleValue: new FormControl(0, Validators.required),
+      species: new FormControl(null, Validators.required),
       breed: new FormControl(null, Validators.required)
     });
   }
   
   ngOnInit(): void {
-    this.breedService.findAllBreeds().subscribe({
-      next: (breeds) => {
-        this.breeds = breeds;
+    this.speciesService.findAllSpecies().subscribe({
+      next: (species) => {
+        this.species = species
       },
       error: (error) => {
-
+        this.toastService.error("ERRO AO CARREGAR LISTA DE ESPÉCIES!")
+        console.log(error);
       },
       complete: () => {
         if(this.isEdit) {
-          this.animalForm.setValue({
-            name: this.animalData.animal.name,
-            sex: this.animalData.animal.sex,
-            acquisitionDate: this.animalData.animal.acquisitionDate,
-            saleDate: this.animalData.animal.saleDate,
-            acquisitionValue: this.animalData.animal.acquisitionValue,
-            saleValue: this.animalData.animal.saleValue,
-            breed: this.animalData.animal.breed.id
+          const speciesId = this.animalData.animal.breed.species?.id!;
+          this.breedService.findBreedsBySpeciesId(speciesId).subscribe({
+            next: (breedsList) => {
+              this.breeds = breedsList;
+            },
+            error: (error) => {
+              this.toastService.error("ERRO AO CARREGAR LISTA DE RAÇAS!");
+              console.error(error);
+            },
+            complete: () => {
+              this.animalForm.setValue({
+                name: this.animalData.animal.name,
+                sex: this.animalData.animal.sex,
+                acquisitionDate: this.animalData.animal.acquisitionDate,
+                saleDate: this.animalData.animal.saleDate,
+                acquisitionValue: this.animalData.animal.acquisitionValue,
+                saleValue: this.animalData.animal.saleValue,
+                species: this.animalData.animal.breed.species?.id,
+                breed: this.animalData.animal.breed.id
+              });
+              this.selectedFileUrl = this.animalData.imageBase64
+            }
           });
-          this.selectedFileUrl = this.animalData.imageBase64
         }
       }
     });
@@ -134,6 +153,25 @@ export class AnimalFormComponent implements OnInit {
         }
       });;
     }
+  }
+
+  onSpeciesSelectChange(event: any) {
+    const speciesId = event.value;
+    this.breedService.findBreedsBySpeciesId(speciesId).subscribe({
+      next: (breedList) => {
+        this.animalForm.patchValue({
+          breed: null
+        });
+        this.breeds = breedList;
+      },
+      error: (error) => {
+        this.toastService.error("ERRO AO CARREGAR LISTA DE RAÇAS!")
+        console.error(error);
+      },
+      complete: () => {
+
+      }
+    });
   }
 
   onCancel() {

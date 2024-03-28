@@ -18,4 +18,9 @@ export class BreedService {
     return this.httpClient.get<Breed[]>(findAllUrl);
   }
 
+  findBreedsBySpeciesId(speciesId: string): Observable<Breed[]> {
+    const findBySpeciesIdUrl = `${this.URL}/find/species/${speciesId}`;
+    return this.httpClient.get<Breed[]>(findBySpeciesIdUrl);
+  }
+
 }

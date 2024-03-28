@@ -8,6 +8,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -22,7 +26,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatButtonModule,
     MatDialogModule,
     MatDividerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatExpansionModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatFormFieldModule
   ]
 })
 export class MonitoringModule { }

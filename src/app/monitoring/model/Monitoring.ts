@@ -10,3 +10,12 @@ export class Monitoring {
       public dewormed: boolean | null = null
     ) {}
   }
+
+export class SaveMonitoringRequest {
+  constructor(
+    public animalId: string,
+    public height: number,
+    public weight: number,
+    public dewormed: boolean
+  ) {}
+}

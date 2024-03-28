@@ -83,7 +83,10 @@ export class LoginComponent implements OnInit {
 
   logout() {
     this.authService.clearToken();
+    localStorage.removeItem('farmId');
+    localStorage.removeItem('user');
     this.authService.isUserAuthenticated = false;
+    this.toastService.warning("SESSÃO EXPIRADA.");
     this.router.navigateByUrl("login");
   }
 

@@ -1,7 +1,7 @@
 export class Species {
   constructor(
     public id: string,
-    public name: string
+    public name: string | null = null
   ) { }
 
   static createTestInstance(): Species {
