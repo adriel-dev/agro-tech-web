@@ -3,11 +3,12 @@ import { Animal, FindAllAnimalsResponse } from '../model/Animal';
 import { Species } from 'src/app/species/model/Species';
 import { AnimalService } from '../animal.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { AnimalFormComponent } from '../animal-form/animal-form.component';
 import { ToastrService } from 'ngx-toastr';
 import { SpeciesService } from 'src/app/species/species.service';
+import { MatRadioChange } from '@angular/material/radio';
+import { MatFormField } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-animal-list',
@@ -20,6 +21,8 @@ export class AnimalListComponent implements OnInit {
 
   species: Species[] = [];
 
+  selectedFilter: string = "none";
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   pageIndex = 0;
@@ -28,6 +31,9 @@ export class AnimalListComponent implements OnInit {
   length = 0;
 
   selectedSpeciesFilter: string[] = [];
+
+  @ViewChild("externalIdFilter") externalIdFilterInput!: MatFormField;
+  @ViewChild("animalNameFilter") animalNameFilterInput!: MatFormField;
 
   constructor(
     private animalService: AnimalService,
@@ -41,8 +47,8 @@ export class AnimalListComponent implements OnInit {
     this.loadSpecies();
   }
 
-  loadAnimals(pageNumber: number = 0, pageSize: number = 10) {
-    this.animalService.findAllAnimals(pageNumber, pageSize).subscribe({
+  loadAnimals(pageNumber: number = 0, pageSize: number = 10, speciesIds: string[] = [], animalName: string = "", externalId: string = "") {
+    this.animalService.findAllAnimals(pageNumber, pageSize, speciesIds, animalName, externalId).subscribe({
       next: (page) => {
         this.animals = page.content;
         this.pageIndex = pageNumber;
@@ -102,15 +108,27 @@ export class AnimalListComponent implements OnInit {
   }
 
   onSpeciesFilter(event: any) {
-    event.stopPropagation();
+    this.loadAnimals(0, 10, this.selectedSpeciesFilter);
   }
 
-  onAnimalNameOrIdFilter(event: any) {
-    event.stopPropagation();
+  onAnimalIdFilter(event: any) {
+    const externalId = this.externalIdFilterInput._control.value
+    this.loadAnimals(0, 10, [], "", externalId);
   }
-
+  
+  onAnimalNameFilter(event: any) {
+    const animalName = this.animalNameFilterInput._control.value
+    this.loadAnimals(0, 10, [], animalName, "");
+  }
   onEditDialogClose() {
     this.loadAnimals(this.pageIndex, this.pageSize);
+  }
+
+  onFilterRadioChange(event: MatRadioChange) {
+    if(event.value == 'none') {
+      this.loadAnimals();
+    }
+    this.selectedFilter = event.value;
   }
 
 }

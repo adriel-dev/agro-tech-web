@@ -59,7 +59,7 @@ export class NavbarComponent implements OnInit {
     },
     {
       icon: 'warehouse',
-      label: 'Galpões',
+      label: 'Armazéns',
       route: 'warehouses'
     }
   ]);

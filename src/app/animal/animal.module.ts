@@ -17,12 +17,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatRadioModule } from '@angular/material/radio';
 
 import { NgxCurrencyDirective } from 'ngx-currency';
 
 import { AnimalListComponent } from './animal-list/animal-list.component';
 import { AnimalCardComponent } from './animal-card/animal-card.component';
 import { AnimalFormComponent } from './animal-form/animal-form.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { AnimalFormComponent } from './animal-form/animal-form.component';
     MatNativeDateModule,
     MatDividerModule,
     MatAutocompleteModule,
-    NgxCurrencyDirective
+    MatMenuModule,
+    MatRadioModule,
+    NgxCurrencyDirective,
   ]
 })
 export class AnimalModule { }

@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Species } from '../species/model/Species';
-import { Breed } from '../breed/model/Breed';
-import { Farm } from '../farm/model/Farm';
-import { Animal, PagedAnimals, SaveAnimalRequest, SexEnum } from './model/Animal';
-import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { PagedAnimals } from './model/Animal';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/enviroments/enviroment';
 import { Observable } from 'rxjs';
 
@@ -16,9 +13,15 @@ export class AnimalService {
 
   constructor(private http: HttpClient) { }
 
-  findAllAnimals(page: number = 0, size: number = 10): Observable<PagedAnimals> {
+  findAllAnimals(page: number = 0, size: number = 10, speciesIds: string[], animalName: string, externalId: string): Observable<PagedAnimals> {
     const findAllUrl = `${this.URL}/find/all`;
-    return this.http.get<PagedAnimals>(findAllUrl, { params: { page, size } });
+    let params = new HttpParams();
+    params = params.set('page', page);
+    params = params.set('size', size);
+    if (speciesIds.length > 0) params = params.set('speciesIds', speciesIds.join(','));
+    if (animalName !== "") params = params.set('animalName', animalName);
+    if (externalId !== "") params = params.set('externalId', externalId);
+    return this.http.get<PagedAnimals>(findAllUrl, { params });
   }
 
   saveAnimal(formData: FormData) {
