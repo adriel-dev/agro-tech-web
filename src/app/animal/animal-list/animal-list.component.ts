@@ -120,6 +120,7 @@ export class AnimalListComponent implements OnInit {
     const animalName = this.animalNameFilterInput._control.value
     this.loadAnimals(0, 10, [], animalName, "");
   }
+  
   onEditDialogClose() {
     this.loadAnimals(this.pageIndex, this.pageSize);
   }

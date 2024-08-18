@@ -37,13 +37,18 @@ import { ToastContainerDirective, provideToastr } from 'ngx-toastr';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
 import { PtMatPaginatorIntl } from "./components/paginator/PtMatPaginator";
+import { EmployeeModule } from './employee/employee.module';
+import { TaskModule } from './task/task.module';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     LoginComponent,
-    LayoutComponent
+    LayoutComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +57,8 @@ import { PtMatPaginatorIntl } from "./components/paginator/PtMatPaginator";
     AnimalModule,
     BreedModule,
     MonitoringModule,
+    EmployeeModule,
+    TaskModule,
     MatSlideToggleModule,
     MatSidenavModule,
     MatListModule,
@@ -64,6 +71,8 @@ import { PtMatPaginatorIntl } from "./components/paginator/PtMatPaginator";
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
+    MatDividerModule,
+    MatDialogModule,
     MatDividerModule,
     ToastContainerDirective,
   ],

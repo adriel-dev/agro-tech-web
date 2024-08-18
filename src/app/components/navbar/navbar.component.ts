@@ -20,7 +20,7 @@ export type MenuItem = {
 })
 export class NavbarComponent implements OnInit {
 
-  lightModeChecked = signal(false);
+  lightModeChecked = signal(localStorage.getItem('selectedTheme') === 'light');
 
   collapsed = signal(false);
 
