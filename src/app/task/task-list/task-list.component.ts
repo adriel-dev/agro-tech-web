@@ -11,7 +11,7 @@ export class TaskListComponent implements OnInit {
 
   employee!: Employee;
 
-  constructor(private router: Router) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.employee = history.state.employee;
