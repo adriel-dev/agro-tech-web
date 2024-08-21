@@ -59,3 +59,11 @@ mat-toolbar * {
 .theme-icon {
     transform: scale(0.7);
 }
+
+.cursor-not-allowed {
+    cursor: not-allowed;
+}
+
+.disabled-item {
+    filter: opacity(0.5);
+}

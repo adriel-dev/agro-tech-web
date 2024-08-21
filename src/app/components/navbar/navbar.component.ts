@@ -11,6 +11,7 @@ export type MenuItem = {
   icon: string;
   label: string;
   route: string;
+  title: string;
 }
 
 @Component({
@@ -40,27 +41,32 @@ export class NavbarComponent implements OnInit {
     {
       icon: 'dashboard',
       label: 'Painel',
-      route: 'dashboard'
+      route: 'dashboard',
+      title: ''
     },
     {
       icon: 'pets',
       label: 'Animais',
-      route: 'animals'
+      route: 'animals',
+      title: ''
     },
     {
       icon: 'person',
       label: 'Funcionários',
-      route: 'employees'
+      route: 'employees',
+      title: ''
     },
     {
       icon: 'inventory',
       label: 'Estoque',
-      route: 'stock'
+      route: '#',
+      title: 'Não disponível'
     },
     {
       icon: 'warehouse',
       label: 'Armazéns',
-      route: 'warehouses'
+      route: '#',
+      title: 'Não disponível'
     }
   ]);
 

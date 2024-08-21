@@ -31,7 +31,7 @@
         </div>
         <mat-nav-list>
             <a class="menu-item" mat-list-item [routerLink]="item.route" routerLinkActive="selected-menu-item"
-                #rla="routerLinkActive" [activated]="rla.isActive" *ngFor="let item of menuItems()">
+                #rla="routerLinkActive" [activated]="rla.isActive" *ngFor="let item of menuItems(); let i = index" [title]="item.title" [ngClass]="{'cursor-not-allowed disabled-item': i >= menuItems().length - 2}">
                 <mat-icon [fontSet]="rla.isActive ? 'material-icons' : 'material-icons-outlined'" matListItemIcon>{{
                     item.icon }}</mat-icon>
                 <span matListItemTitle *ngIf="!collapsed()">{{ item.label }}</span>
